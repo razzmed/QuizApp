@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="16dp"
+    android:orientation="vertical" >
+    
+    <TextView
+        android:id="@+id/tv_category"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Category:Mixed"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:drawableEnd="@drawable/ic_three_dots"/>
+
+    <TextView
+        android:id="@+id/tv_correct_answers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Correct answers:8/10"
+        android:textColor="#000000"/>
+
+    <TextView
+        android:id="@+id/tv_difficulty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Difficulty: Easy"
+        android:textColor="#000000"/>
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Date"
+        android:textColor="#000000"/>
+
+
+
+</LinearLayout>

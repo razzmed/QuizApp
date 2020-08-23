@@ -6,6 +6,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.quizapp.adapters.MainPagerAdapter;
 import com.example.quizapp.ui.fragments.MainFragment;
