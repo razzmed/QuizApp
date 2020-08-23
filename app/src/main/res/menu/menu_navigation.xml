@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/main_nav"
+        android:title="Shape"
+        android:enabled="true"
+        android:icon="@drawable/ic_shape" />
+
+    <item
+        android:id="@+id/history_nav"
+        android:title="Path"
+        android:enabled="true"
+        android:icon="@drawable/ic_path" />
+
+    <item
+        android:id="@+id/settings_nav"
+        android:title="Group"
+        android:enabled="true"
+        android:icon="@drawable/ic_group" />
+
+</menu>
