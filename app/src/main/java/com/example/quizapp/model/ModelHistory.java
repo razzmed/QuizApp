@@ -1,22 +1,23 @@
 package com.example.quizapp.model;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class ModelHistory implements Serializable {
+
+    private int id;
     private String category;
-    private String correctAnswers;
     private String difficulty;
-    private String date;
+    private int correctAnswers;
+    private int amount;
+    private Date createdAt;
 
-    public ModelHistory() {
-
+    public int getId() {
+        return id;
     }
 
-    public ModelHistory(String category, String correctAnswers, String difficulty, String date) {
-        this.category = category;
-        this.correctAnswers = correctAnswers;
-        this.difficulty = difficulty;
-        this.date = date;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getCategory() {
@@ -27,14 +28,6 @@ public class ModelHistory implements Serializable {
         this.category = category;
     }
 
-    public String getCorrectAnswers() {
-        return correctAnswers;
-    }
-
-    public void setCorrectAnswers(String correctAnswers) {
-        this.correctAnswers = correctAnswers;
-    }
-
     public String getDifficulty() {
         return difficulty;
     }
@@ -43,11 +36,27 @@ public class ModelHistory implements Serializable {
         this.difficulty = difficulty;
     }
 
-    public String getDate() {
-        return date;
+    public int getCorrectAnswers() {
+        return correctAnswers;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setCorrectAnswers(int correctAnswers) {
+        this.correctAnswers = correctAnswers;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

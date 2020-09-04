@@ -9,8 +9,12 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.quizapp.adapters.MainPagerAdapter;
+import com.example.quizapp.data.remote.IQuizApiClient;
+import com.example.quizapp.model.Question;
 import com.example.quizapp.ui.fragments.MainFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -48,5 +52,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        QuizApp.quizApiClient.getQuestions(new IQuizApiClient.QuestionCallBack() {
+            @Override
+            public void onSuccess(List<Question> result) {
+
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
     }
 }

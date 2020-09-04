@@ -43,11 +43,11 @@ public class HistoryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         RecyclerView recyclerView = view.findViewById(R.id.rv_history);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        list.add(new ModelHistory("Mixed", "8/10", "difficult", "12 July 2020"));
-        list.add(new ModelHistory("Mixed", "2/10", "difficult", "12 July 2020"));
-        list.add(new ModelHistory("Mixed", "3/10", "difficult", "12 July 2020"));
-        list.add(new ModelHistory("Mixed", "4/10", "difficult", "12 July 2020"));
-        list.add(new ModelHistory("Mixed", "10/10", "difficult", "12 July 2020"));
+//        list.add(new ModelHistory("Mixed", "8/10", "difficult", "12 July 2020"));
+//        list.add(new ModelHistory("Mixed", "2/10", "difficult", "12 July 2020"));
+//        list.add(new ModelHistory("Mixed", "3/10", "difficult", "12 July 2020"));
+//        list.add(new ModelHistory("Mixed", "4/10", "difficult", "12 July 2020"));
+//        list.add(new ModelHistory("Mixed", "10/10", "difficult", "12 July 2020"));
         adapter = new Adapter(list);
         recyclerView.setAdapter(adapter);
     }

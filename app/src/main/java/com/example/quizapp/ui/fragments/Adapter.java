@@ -58,7 +58,7 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
             category.setText(history.getCategory());
             correctAnswers.setText(history.getCorrectAnswers());
             difficulty.setText(history.getDifficulty());
-            date.setText(history.getDate());
+            //date.setText(history.getDate());
         }
     }
 
