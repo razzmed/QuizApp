@@ -11,16 +11,17 @@ import com.example.quizapp.ui.history.HistoryStorage;
 public class QuizApp extends Application {
 
     public static IQuizApiClient quizApiClient;
+    public static QuizRepository repository;
 
     private static IHistoryStorage historyStorage;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        repository = new QuizRepository(new QuizApiClient(), new HistoryStorage());
 
-        quizApiClient = new QuizApiClient();
-        historyStorage = new HistoryStorage();
+        quizApiClient = repository;
+        historyStorage = repository;
     }
 
-    QuizRepository repository = new QuizRepository(quizApiClient, historyStorage);
 }

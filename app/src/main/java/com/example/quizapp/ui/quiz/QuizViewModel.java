@@ -1,5 +1,7 @@
 package com.example.quizapp.ui.quiz;
 
+import android.util.Log;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -16,45 +18,60 @@ public class QuizViewModel extends ViewModel {
 
     private IQuizApiClient quizApiClient = QuizApp.quizApiClient;
     private List<Question> mQuestions;
+    private Integer count;
+
+    public QuizViewModel() {
+        currentQuestionPosition.setValue(0);
+        count = 0;
+    }
 
     void init(int amount, int categoryIndex, String difficultyIndex) {
-        quizApiClient.getQuestions(new IQuizApiClient.QuestionCallBack() {
+        quizApiClient.getQuestions(amount, categoryIndex, difficultyIndex, new IQuizApiClient.QuestionCallBack() {
             @Override
             public void onSuccess(List<Question> result) {
                 mQuestions = result;
                 question.setValue(mQuestions);
-                currentQuestionPosition.setValue(0);
             }
 
             @Override
             public void onFailure(Exception e) {
-
+                Log.e("TAG", "onFailure: " + e.getLocalizedMessage());
             }
         });
     }
 
     void finishQuiz() {
-
     }
 
     void onSkipClick() {
+        Integer pos = currentQuestionPosition.getValue();
+        if (pos != null) {
+            onAnswerClick(pos, -1);
+        }
 
     }
 
     void onBackPressed() {
-        
+        Integer pos = currentQuestionPosition.getValue();
+        if (pos != null) {
+            if (pos != 0) {
+                currentQuestionPosition.setValue(--count);
+            } else {
+                finishQuiz();
+            }
+        }
     }
 
     public void onAnswerClick(int position, int selectedAnswerPosition) {
-        if (mQuestions.size() > position) {
-            currentQuestionPosition.setValue(currentQuestionPosition.getValue() + 1);
-            mQuestions.get(position).setSelectAnswerPosition(selectedAnswerPosition);
-            question.setValue(mQuestions);
-
-            if (position == mQuestions.size() - 1) {
+        if (mQuestions.size() > position && position >= 0) {
+            if (mQuestions.get(position).getSelectAnswerPosition() == null) {
+                mQuestions.get(position).setSelectAnswerPosition(selectedAnswerPosition);
+                question.setValue(mQuestions);
+            }
+            if (position + 1 == mQuestions.size()) {
                 finishQuiz();
             } else {
-                currentQuestionPosition.setValue(currentQuestionPosition.getValue() + 1);
+                currentQuestionPosition.setValue(++count);
             }
         }
     }

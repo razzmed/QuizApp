@@ -32,36 +32,35 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(new MainPagerAdapter(getSupportFragmentManager()));
         viewPager.setOffscreenPageLimit(2);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        bottomNavigationView.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.main_nav:
+                    viewPager.setCurrentItem(0, false);
+                    break;
+                case R.id.history_nav:
+                    viewPager.setCurrentItem(1, false);
+                    break;
+                case R.id.settings_nav:
+                    viewPager.setCurrentItem(2, false);
+                    break;
 
-                switch (item.getItemId()) {
-                    case R.id.main_nav:
-                        viewPager.setCurrentItem(0, false);
-                        break;
-                    case R.id.history_nav:
-                        viewPager.setCurrentItem(1, false);
-                        break;
-                    case R.id.settings_nav:
-                        viewPager.setCurrentItem(2, false);
-                        break;
-
-                }
-                return true;
             }
+            return true;
         });
+    }
 
-        QuizApp.quizApiClient.getQuestions(new IQuizApiClient.QuestionCallBack() {
-            @Override
-            public void onSuccess(List<Question> result) {
-
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-
-            }
-        });
+    @Override
+    public void onBackPressed() {
+        switch (viewPager.getCurrentItem()) {
+            case 0:
+                super.onBackPressed();
+                break;
+            case 1:
+                viewPager.setCurrentItem(0);
+                break;
+            case 2:
+                viewPager.setCurrentItem(1);
+                break;
+        }
     }
 }

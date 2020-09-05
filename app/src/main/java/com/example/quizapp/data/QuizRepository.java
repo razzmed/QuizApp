@@ -6,7 +6,6 @@ import com.example.quizapp.model.Question;
 import com.example.quizapp.model.QuizResult;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -18,24 +17,6 @@ public class QuizRepository implements IHistoryStorage, IQuizApiClient {
     public QuizRepository(IQuizApiClient quizApiClient, IHistoryStorage historyStorage) {
         this.quizApiClient = quizApiClient;
         this.historyStorage = historyStorage;
-    }
-
-    public void getQuestions1(final IQuizApiClient.QuestionCallBack callBack) {
-        quizApiClient.getQuestions(new QuestionCallBack() {
-            @Override
-            public void onSuccess(List<Question> result) {
-                for (int i = 0; i < result.size(); i++) {
-                    result.set(i, shuffleAnswer(result.get(i)));
-                }
-                callBack.onSuccess(result);
-            }
-
-            @Override
-            public void onFailure(Exception e) {
-
-            }
-        });
-
     }
 
     private Question shuffleAnswer(Question question) {
@@ -70,7 +51,20 @@ public class QuizRepository implements IHistoryStorage, IQuizApiClient {
     }
 
     @Override
-    public void getQuestions(QuestionCallBack callBack) {
+    public void getQuestions(int amountIndex, int categoryIndex, String difficultyIndex, QuestionCallBack callBack) {
+        quizApiClient.getQuestions(amountIndex, categoryIndex, difficultyIndex, new QuestionCallBack() {
+            @Override
+            public void onSuccess(List<Question> result) {
+                for (int i = 0; i < result.size(); i++) {
+                    result.set(i, shuffleAnswer(result.get(i)));
+                }
+                callBack.onSuccess(result);
+            }
 
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
     }
 }

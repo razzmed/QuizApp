@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,11 +34,11 @@ public class MainFragment extends Fragment {
     private Button mStart;
     private SeekBar mSeekBar;
     private Spinner categorySpinner, difficultySpinner;
-    private String category, difficulty;
 
-    private int amountIndex;
-    private int categoryIndex = 9;
-    private String difficultyIndex = "easy";
+    private int amountIndex = 5;
+    private String categoryIndex = "Any Category";
+    private int category;
+    private String difficultyIndex = "Any Difficulty";
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -59,11 +60,8 @@ public class MainFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mAmount = view.findViewById(R.id.amount);
-        mStart = view.findViewById(R.id.start_button);
-        mSeekBar = view.findViewById(R.id.amount_seek_bar);
-        categorySpinner = view.findViewById(R.id.category_spinner);
-        difficultySpinner = view.findViewById(R.id.difficulty_spinner);
+        initView(view);
+        mSeekBar.setProgress(5);
 
         mSeekBar.setOnSeekBarChangeListener(new SimpleSeekBarChangeListener() {
             @Override
@@ -73,17 +71,16 @@ public class MainFragment extends Fragment {
             }
         });
 
-        mStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                QuizActivity.start(getContext(), amountIndex, categoryIndex, difficultyIndex);
-            }
+        mStart.setOnClickListener(v -> {
+            QuizActivity.start(getContext(), amountIndex, category, difficultyIndex);
+            Log.d("ololo1:", amountIndex + " " + categoryIndex + " " + difficultyIndex);
         });
 
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                category = parent.getSelectedItem().toString();
+                categoryIndex = parent.getSelectedItem().toString();
+                category = position + 8;
             }
 
             @Override
@@ -95,7 +92,7 @@ public class MainFragment extends Fragment {
         difficultySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                difficulty = parent.getSelectedItem().toString();
+                difficultyIndex = parent.getSelectedItem().toString();
             }
 
             @Override
@@ -103,5 +100,14 @@ public class MainFragment extends Fragment {
 
             }
         });
+    }
+
+    private void initView(View view) {
+        mAmount = view.findViewById(R.id.amount);
+        mStart = view.findViewById(R.id.start_button);
+        mSeekBar = view.findViewById(R.id.amount_seek_bar);
+        categorySpinner = view.findViewById(R.id.category_spinner);
+        difficultySpinner = view.findViewById(R.id.difficulty_spinner);
+
     }
 }

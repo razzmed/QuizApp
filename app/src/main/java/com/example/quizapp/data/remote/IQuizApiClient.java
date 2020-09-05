@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IQuizApiClient {
 
-    void getQuestions(QuestionCallBack callBack);
+    void getQuestions(int amountIndex, int categoryIndex, String difficultyIndex, QuestionCallBack callBack);
 
     interface QuestionCallBack extends IBaseCallback<List<Question>> {
         @Override

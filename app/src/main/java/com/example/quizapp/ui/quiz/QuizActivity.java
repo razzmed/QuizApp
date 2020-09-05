@@ -10,13 +10,20 @@ import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.example.quizapp.QuizApp;
 import com.example.quizapp.R;
+import com.example.quizapp.data.remote.IQuizApiClient;
 import com.example.quizapp.model.Question;
 import com.example.quizapp.ui.quiz.recycler.QuestionAdapter;
 import com.example.quizapp.ui.quiz.recycler.QuestionViewHolder;
@@ -31,59 +38,60 @@ public class QuizActivity extends AppCompatActivity implements QuestionViewHolde
     public static final String EXTRA_DIFFICULTY = "difficultyIndex";
 
     private int amountIndex;
-    private int categoryIndex;
-    private String difficultyIndex;
-    private Intent intent = getIntent();
+    String categoryIndex, difficultyIndex;
+    int category;
 
     private QuizViewModel viewModel;
 
-    private RecyclerView recyclerView;
-    private QuestionAdapter adapter;
-    private ArrayList<Question> list = new ArrayList<>();
+    RecyclerView recyclerView;
+    QuestionAdapter adapter;
+    ProgressBar progressBar;
+    TextView quizCount, categoryQuiz;
+    private List<Question> list = new ArrayList<>();
+    Button btnSkip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-        recyclerView = findViewById(R.id.questions_rw);
-
         viewModel = ViewModelProviders.of(this).get(QuizViewModel.class);
+        recyclerView = findViewById(R.id.questions_rw);
+        progressBar = findViewById(R.id.count_progress);
+        quizCount = findViewById(R.id.tv_count);
+        btnSkip = findViewById(R.id.btn_skip);
+        categoryQuiz = findViewById(R.id.tv_category_quiz);
 
-        amountIndex = getIntent().getIntExtra(EXTRA_AMOUNT, 10);
-        categoryIndex = getIntent().getIntExtra(EXTRA_CATEGORY, 9);
-        difficultyIndex = getIntent().getStringExtra(EXTRA_DIFFICULTY);
+        getData();
+        setRecyclerView();
+    }
 
-        viewModel.init(amountIndex, categoryIndex, difficultyIndex);
-
-        viewModel.question.observe(this, new Observer<List<Question>>() {
-            @Override
-            public void onChanged(List<Question> questions) {
-                adapter.setQuestions(questions);
-            }
-        });
-
-        viewModel.currentQuestionPosition.observe(this, new Observer<Integer>() {
-            @Override
-            public void onChanged(Integer integer) {
-                recyclerView.smoothScrollToPosition(integer);
-            }
-        });
-
-        adapter = new QuestionAdapter(list,this);
-
-        recyclerView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
-
+    @SuppressLint("ClickableViewAccessibility")
+    private void setRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
+        adapter = new QuestionAdapter(list, this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setOnTouchListener((v, event) -> true);
         SnapHelper snapHelper = new PagerSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
+    }
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
-        recyclerView.setAdapter(adapter);
+    @SuppressLint("SetTextI18n")
+    private void getPosition() {
+        viewModel.currentQuestionPosition.observe(this, integer -> {
+            if (integer != null) {
+                    recyclerView.smoothScrollToPosition(integer);
+                    progressBar.setProgress(integer + 1);
+                    progressBar.setMax(amountIndex);
+                    quizCount.setText((integer + 1) + "/" + amountIndex);
+                    categoryQuiz.setText(categoryIndex);
+                    if (integer + 1 == list.size()) {
+                        btnSkip.setText("Finish");
+                    } else {
+                        btnSkip.setText("Skip");
+                }
+            }
+        });
     }
 
     public static void start(Context context, int amountIndex, int categoryIndex, String difficultyIndex) {
@@ -94,8 +102,50 @@ public class QuizActivity extends AppCompatActivity implements QuestionViewHolde
         context.startActivity(intent);
     }
 
+    private void getData() {
+        if (getIntent() != null) {
+            amountIndex = getIntent().getIntExtra(EXTRA_AMOUNT, 10);
+            category = getIntent().getIntExtra(EXTRA_CATEGORY, 0);
+            difficultyIndex = getIntent().getStringExtra(EXTRA_DIFFICULTY);
+            Log.d("ololo", "amount" + amountIndex + "categoryIndex" + categoryIndex + "difficulty" + difficultyIndex + "");
+
+            if (category == 8) {
+                category = 0;
+            }
+            if (difficultyIndex.equals("Any Difficulty")) {
+                difficultyIndex = null;
+            } else {
+                difficultyIndex = difficultyIndex.toLowerCase();
+            }
+            getQuestions();
+        }
+    }
+
+    private void getQuestions() {
+        viewModel.init(amountIndex, category, difficultyIndex);
+
+        viewModel.question.observe(this, questions -> {
+            list = questions;
+            adapter.setQuestions(questions);
+            getPosition();
+        });
+    }
+
     @Override
     public void onAnswerClick(int position, int selectAnswerPosition) {
         viewModel.onAnswerClick(position, selectAnswerPosition);
     }
+
+    public void onSkip(View view) {
+        viewModel.onSkipClick();
+    }
+
+    public void onBack(View view) {
+        viewModel.onBackPressed();
+    }
+
+//    @Override
+//    public void onBackPressed() {
+//        viewModel.onBackPressed();
+//    }
 }

@@ -10,27 +10,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.quizapp.R;
 import com.example.quizapp.model.Question;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class QuestionAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private ArrayList<Question> questions;
+    private List<Question> questions;
     private QuestionViewHolder.Listener listener;
 
-    public QuestionAdapter(ArrayList<Question> questions, QuestionViewHolder.Listener listener) {
+    public QuestionAdapter(List<Question> questions, QuestionViewHolder.Listener listener) {
         this.questions = questions;
-        this.listener = listener;
-    }
-
-    public QuestionAdapter(QuestionViewHolder.Listener listener) {
         this.listener = listener;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.question_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.question_item, parent, false);
         return new QuestionViewHolder(view, listener);
     }
 

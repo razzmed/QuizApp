@@ -14,17 +14,16 @@ import retrofit2.http.Query;
 
 public class QuizApiClient implements IQuizApiClient {
 
-    Retrofit retrofit = new Retrofit.Builder().baseUrl("http://opendb.com/")
+    Retrofit retrofit = new Retrofit.Builder().baseUrl("https://opentdb.com/")
             .addConverterFactory(GsonConverterFactory.create()).build();
 
     QuizApi client = retrofit.create(QuizApi.class);
 
     @Override
-    public void getQuestions(final QuestionCallBack callBack) {
+    public void getQuestions(int amountIndex, int categoryIndex, String difficultyIndex, QuestionCallBack callBack) {
+        Call<QuizResponse> call = client.getQuestions(amountIndex, categoryIndex, difficultyIndex);
 
-        Call<QuizResponse> call = client.getQuestions(10, null, null);
-
-        Log.d("ololo", "Url - " + call.request().url());
+        Log.e("ololo", "Url - " + call.request().url());
 
         call.enqueue(new Callback<QuizResponse>() {
             @Override
@@ -38,23 +37,22 @@ public class QuizApiClient implements IQuizApiClient {
                 } else {
                     callBack.onFailure(new Exception("Response is empty" + response.code()));
 
+                }
             }
-        }
 
-        @Override
-        public void onFailure (Call < QuizResponse > call, Throwable t){
+            @Override
+            public void onFailure(Call<QuizResponse> call, Throwable t) {
                 callBack.onFailure(new Exception(t));
-        }
-    });
+            }
+        });
+    }
 
-}
-
-interface QuizApi {
-    @GET("api.php")
-    Call<QuizResponse> getQuestions(
-            @Query("amount") int amount,
-            @Query("category") String category,
-            @Query("difficulty") String difficulty
-    );
-}
+    interface QuizApi {
+        @GET("api.php")
+        Call<QuizResponse> getQuestions(
+                @Query("amount") int amount,
+                @Query("category") int category,
+                @Query("difficulty") String difficulty
+        );
+    }
 }
