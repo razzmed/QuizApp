@@ -1,15 +1,31 @@
 package com.example.quizapp.model;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+import androidx.room.TypeConverter;
+import androidx.room.TypeConverters;
+
+import com.example.quizapp.db.converter.DateConverter;
+import com.example.quizapp.db.converter.QuestionConverter;
+
 import java.util.Date;
 import java.util.List;
 
+@Entity
 public class QuizResult {
 
+    @PrimaryKey(autoGenerate = true)
     private int id;
+    @ColumnInfo
     private String category;
+    @ColumnInfo
     private String difficulty;
+    @ColumnInfo(name = "correctAnswerResult")
     int correctAnswerResult;
+    @TypeConverters({QuestionConverter.class})
     private List<Question> questions;
+    @TypeConverters({DateConverter.class})
     private Date createdAt;
 
     public QuizResult(int id, String category, String difficulty, int correctAnswerResult, List<Question> questions, Date createdAt) {

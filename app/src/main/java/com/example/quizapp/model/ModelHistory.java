@@ -12,6 +12,15 @@ public class ModelHistory implements Serializable {
     private int amount;
     private Date createdAt;
 
+    public ModelHistory(int id, String category, int correctAnswerResult, String difficulty, int size, Date createdAt) {
+        this.id = id;
+        this.category = category;
+        this.correctAnswers = correctAnswerResult;
+        this.difficulty = difficulty;
+        this.amount = size;
+        this.createdAt = createdAt;
+    }
+
     public int getId() {
         return id;
     }

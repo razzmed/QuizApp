@@ -1,9 +1,15 @@
 package com.example.quizapp.data;
 
+import androidx.lifecycle.LiveData;
+
 import com.example.quizapp.data.remote.IHistoryStorage;
 import com.example.quizapp.data.remote.IQuizApiClient;
+import com.example.quizapp.data.remote.QuizApiClient;
+import com.example.quizapp.db.QuizDao;
+import com.example.quizapp.model.ModelHistory;
 import com.example.quizapp.model.Question;
 import com.example.quizapp.model.QuizResult;
+import com.example.quizapp.ui.history.HistoryStorage;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,8 +19,9 @@ public class QuizRepository implements IHistoryStorage, IQuizApiClient {
 
     private IQuizApiClient quizApiClient;
     private IHistoryStorage historyStorage;
+    private QuizDao quizDao;
 
-    public QuizRepository(IQuizApiClient quizApiClient, IHistoryStorage historyStorage) {
+    public QuizRepository(QuizApiClient quizApiClient, HistoryStorage historyStorage) {
         this.quizApiClient = quizApiClient;
         this.historyStorage = historyStorage;
     }
@@ -32,22 +39,37 @@ public class QuizRepository implements IHistoryStorage, IQuizApiClient {
 
     @Override
     public QuizResult getQuizResult(int id) {
-        return null;
+        return historyStorage.getQuizResult(id);
     }
 
     @Override
     public int saveQuizResult(QuizResult quizResult) {
-        return 0;
+        return historyStorage.saveQuizResult(quizResult);
     }
 
     @Override
-    public void delete(int id) {
+    public LiveData<List<QuizResult>> getAll() {
+        return null;
+    }
 
+    @Override
+    public LiveData<List<ModelHistory>> getAllHistory() {
+        return historyStorage.getAllHistory();
+    }
+
+    @Override
+    public void delete(QuizResult quizResult) {
+        historyStorage.delete(quizResult);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        historyStorage.deleteById(id);
     }
 
     @Override
     public void deleteAll() {
-
+        historyStorage.deleteAll();
     }
 
     @Override
@@ -63,7 +85,7 @@ public class QuizRepository implements IHistoryStorage, IQuizApiClient {
 
             @Override
             public void onFailure(Exception e) {
-
+                callBack.onFailure(e);
             }
         });
     }

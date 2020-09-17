@@ -36,9 +36,8 @@ public class MainFragment extends Fragment {
     private Spinner categorySpinner, difficultySpinner;
 
     private int amountIndex = 5;
-    private String categoryIndex = "Any Category";
-    private int category;
-    private String difficultyIndex = "Any Difficulty";
+    private Integer categoryIndex;
+    private String difficultyIndex;
 
     public static MainFragment newInstance() {
         return new MainFragment();
@@ -72,15 +71,14 @@ public class MainFragment extends Fragment {
         });
 
         mStart.setOnClickListener(v -> {
-            QuizActivity.start(getContext(), amountIndex, category, difficultyIndex);
+            QuizActivity.start(getContext(), amountIndex, categoryIndex, difficultyIndex);
             Log.d("ololo1:", amountIndex + " " + categoryIndex + " " + difficultyIndex);
         });
 
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                categoryIndex = parent.getSelectedItem().toString();
-                category = position + 8;
+                categoryIndex = parent.getSelectedItemPosition()  + 9;
             }
 
             @Override

@@ -4,6 +4,10 @@ import android.util.Log;
 
 import com.example.quizapp.model.QuizResponse;
 
+import org.apache.http.params.HttpParams;
+
+import java.net.SocketException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -17,6 +21,7 @@ public class QuizApiClient implements IQuizApiClient {
     Retrofit retrofit = new Retrofit.Builder().baseUrl("https://opentdb.com/")
             .addConverterFactory(GsonConverterFactory.create()).build();
 
+
     QuizApi client = retrofit.create(QuizApi.class);
 
     @Override
@@ -28,18 +33,17 @@ public class QuizApiClient implements IQuizApiClient {
         call.enqueue(new Callback<QuizResponse>() {
             @Override
             public void onResponse(Call<QuizResponse> call, Response<QuizResponse> response) {
-                if (response.isSuccessful()) {
-                    if (response.body() != null) {
-                        callBack.onSuccess(response.body().getResults());
+                    if (response.isSuccessful()) {
+                        if (response.body() != null) {
+                            callBack.onSuccess(response.body().getResults());
+                        } else {
+                            callBack.onFailure(new Exception("Response is empty" + response.code()));
+                        }
                     } else {
                         callBack.onFailure(new Exception("Response is empty" + response.code()));
+
                     }
-                } else {
-                    callBack.onFailure(new Exception("Response is empty" + response.code()));
-
-                }
             }
-
             @Override
             public void onFailure(Call<QuizResponse> call, Throwable t) {
                 callBack.onFailure(new Exception(t));
@@ -51,7 +55,7 @@ public class QuizApiClient implements IQuizApiClient {
         @GET("api.php")
         Call<QuizResponse> getQuestions(
                 @Query("amount") int amount,
-                @Query("category") int category,
+                @Query("category") Integer category,
                 @Query("difficulty") String difficulty
         );
     }

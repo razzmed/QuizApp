@@ -67,7 +67,6 @@ public class QuestionViewHolder extends RecyclerView.ViewHolder {
             button.setText(Html.fromHtml(question.getAnswers().get(i)));
             i++;
         }
-
     }
 
     public interface Listener {

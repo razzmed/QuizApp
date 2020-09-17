@@ -12,20 +12,27 @@ import com.example.quizapp.R;
 import com.example.quizapp.model.ModelHistory;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
-    ArrayList<ModelHistory> list_history;
+    List<ModelHistory> list_history;
+    private Listener listener;
 
-    public Adapter(ArrayList<ModelHistory> list_history) {
+    public void UpdateAdapter(List<ModelHistory> list_history) {
         this.list_history = list_history;
+        notifyDataSetChanged();
+    }
+
+    public Adapter(Listener listener) {
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_history, parent, false);
-        return new Adapter.ViewHolder(view);
+        return new ViewHolder(view, listener);
     }
 
     @Override
@@ -46,9 +53,10 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
         TextView difficulty;
         TextView date;
 
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView, Listener listener) {
             super(itemView);
             category = itemView.findViewById(R.id.tv_category);
+            category.setOnClickListener(v -> listener.onClick(v, getAdapterPosition()));
             correctAnswers = itemView.findViewById(R.id.tv_correct_answers);
             difficulty = itemView.findViewById(R.id.tv_difficulty);
             date = itemView.findViewById(R.id.tv_date);
@@ -56,10 +64,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
 
         public void bind(ModelHistory history) {
             category.setText(history.getCategory());
-            correctAnswers.setText(history.getCorrectAnswers());
+            correctAnswers.setText(history.getCorrectAnswers() + "/" + history.getAmount());
             difficulty.setText(history.getDifficulty());
-            //date.setText(history.getDate());
+            date.setText(String.valueOf(history.getCreatedAt()));
         }
+    }
+
+    public interface Listener {
+        void onClick(View view, int id);
     }
 
 }
