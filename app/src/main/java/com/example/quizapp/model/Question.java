@@ -14,7 +14,7 @@ public class Question {
     private List<String> incorrectAnswers;
 
     private List<String> answers;
-    private int selectAnswerPosition;
+    private Integer selectAnswerPosition;
 
     public List<String> getAnswers() {
         return answers;
@@ -28,7 +28,7 @@ public class Question {
         return selectAnswerPosition;
     }
 
-    public void setSelectAnswerPosition(int selectAnswerPosition) {
+    public void setSelectAnswerPosition(Integer selectAnswerPosition) {
         this.selectAnswerPosition = selectAnswerPosition;
     }
 

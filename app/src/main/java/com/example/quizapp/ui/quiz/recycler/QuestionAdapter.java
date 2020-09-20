@@ -44,9 +44,9 @@ public class QuestionAdapter extends RecyclerView.Adapter<QuestionViewHolder> {
         return questionList.size();
     }
 
-    public void setQuestions(List<Question> questions) {
-        this.questionList.clear();
-        this.questionList.addAll(questions);
-        notifyDataSetChanged();
-    }
+//    public void setQuestions(List<Question> questions) {
+//        this.questionList.clear();
+//        this.questionList.addAll(questions);
+//        notifyDataSetChanged();
+//    }
 }

@@ -54,7 +54,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginEnd="70dp"
+                android:layout_marginEnd="200dp"
                 android:textColor="@color/Black"
                 style="@style/text_style_result"
                 android:text="Category: "/>

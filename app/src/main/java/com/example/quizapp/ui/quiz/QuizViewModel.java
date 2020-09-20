@@ -13,6 +13,7 @@ import com.example.quizapp.data.remote.IQuizApiClient;
 import com.example.quizapp.model.Question;
 import com.example.quizapp.model.QuizResult;
 
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -22,14 +23,14 @@ public class QuizViewModel extends ViewModel {
     private String resultCategory, resultDifficulty;
     private int id;
     private Integer count;
+    private Boolean isClicked = true;
 
     MutableLiveData<List<Question>> question = new MutableLiveData<>();
     MutableLiveData<Integer> currentQuestionPosition = new MutableLiveData<>();
-    MutableLiveData<Long> timeDown = new MutableLiveData<>();
 
     SingleLiveEvent<Integer> openResultEvent = new SingleLiveEvent<>();
     SingleLiveEvent<Void> finishEvent = new SingleLiveEvent<>();
-    SingleLiveEvent<Boolean> onFailure = new SingleLiveEvent<>();
+    SingleLiveEvent<Boolean> loading = new SingleLiveEvent<>();
 
     private IQuizApiClient quizApiClient = QuizApp.quizApiClient;
 
@@ -39,26 +40,32 @@ public class QuizViewModel extends ViewModel {
     }
 
     public void init(int amount, Integer categoryIndex, String difficultyIndex) {
+        loading.setValue(true);
         quizApiClient.getQuestions(amount, categoryIndex, difficultyIndex, new IQuizApiClient.QuestionCallBack() {
             @Override
             public void onSuccess(List<Question> result) {
                 mQuestion = result;
                 question.setValue(mQuestion);
-                if (categoryIndex != null && result.size() > 0) {
-                    resultCategory = mQuestion.get(0).getCategory();
-                } else {
-                    resultCategory = "Mixed";
-                }
-                if (difficultyIndex != null && result.size() > 0) {
-                    resultDifficulty = mQuestion.get(0).getDifficulty().toString();
-                } else {
-                    resultDifficulty = "All";
+                loading.setValue(false);
+                try {
+                    if (mQuestion.get(1).getCategory().equals(mQuestion.get(2).getCategory())) {
+                        resultCategory = mQuestion.get(1).getCategory();
+                    } else {
+                        resultCategory = "Mixed";
+                    }
+                    if (difficultyIndex != null) {
+                        resultDifficulty = mQuestion.get(0).getDifficulty();
+                    } else {
+                        resultDifficulty = "All";
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    loading.setValue(false);
+                    finishEvent.call();
                 }
             }
 
             @Override
             public void onFailure(Exception e) {
-                onFailure.setValue(true);
                 Log.e("TAG", "onFailure: " + e.getLocalizedMessage());
             }
         });
@@ -79,6 +86,8 @@ public class QuizViewModel extends ViewModel {
     }
 
     void finishQuiz() {
+        Date date = new Date();
+        DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.MEDIUM).format(date);
         QuizResult quizResult = new QuizResult(id, resultCategory, resultDifficulty, getCorrectAnswersAmount(), mQuestion, new Date());
         int resultId = QuizApp.historyStorage.saveQuizResult(quizResult);
         finishEvent.call();
@@ -101,7 +110,7 @@ public class QuizViewModel extends ViewModel {
             if (pos != 0) {
                 currentQuestionPosition.setValue(--count);
             } else {
-                finishQuiz();
+                finishEvent.call();
             }
         }
     }
