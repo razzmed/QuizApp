@@ -43,7 +43,7 @@ public class ResultActivity extends AppCompatActivity {
 
     public void setResult() {
         resultViewModel.quizResultMutableLiveData.observe(this, quizResult -> {
-            if (quizResult != null) {
+
                 categoryResult.setText(quizResult.getCategory());
                 difficultyResult.setText(quizResult.getDifficulty());
                 correctAnswerResult.setText(quizResult.getCorrectAnswerResult() + "/" + quizResult.getQuestions().size());
@@ -51,19 +51,18 @@ public class ResultActivity extends AppCompatActivity {
                 if (correctAnswersPercent == 0) {
                     imageView.setImageResource(R.drawable.ic_looser);
                 }
-                if (correctAnswersPercent == 0 && correctAnswersPercent <=30) {
+                if (correctAnswersPercent > 0 && correctAnswersPercent <=30) {
                     imageView.setImageResource(R.drawable.ic_notbad);
                 }
-                if (correctAnswersPercent == 30 && correctAnswersPercent <=50) {
+                if (correctAnswersPercent > 30 && correctAnswersPercent <=50) {
                     imageView.setImageResource(R.drawable.ic_cool);
                 }
-                if (correctAnswersPercent == 50 && correctAnswersPercent <=80) {
+                if (correctAnswersPercent > 50 && correctAnswersPercent <=80) {
                     imageView.setImageResource(R.drawable.ic_exellent);
                 }
-                if (correctAnswersPercent == 80 && correctAnswersPercent <=100) {
+                if (correctAnswersPercent > 80 && correctAnswersPercent <=100) {
                     imageView.setImageResource(R.drawable.ic_master);
                 }
-            }
         });
     }
 

@@ -14,6 +14,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -131,7 +132,17 @@ public class QuizActivity extends AppCompatActivity implements QuestionViewHolde
                     quizCount.setText(integer + 1 + "/" + amountIndex);
                     progressBar.setProgress(integer + 1);
                     progressBar.setMax(amountIndex);
-                    recyclerView.scrollToPosition(integer);
+                    new CountDownTimer(500, 500) {
+                        @Override
+                        public void onTick(long millisUntilFinished) {
+
+                        }
+
+                        @Override
+                        public void onFinish() {
+                            recyclerView.scrollToPosition(integer);
+                        }
+                    }.start();
                     categoryQuiz.setText(list.get(integer).getCategory());
                     if (integer + 1 == list.size()) {
                         btnSkip.setText("Finish");

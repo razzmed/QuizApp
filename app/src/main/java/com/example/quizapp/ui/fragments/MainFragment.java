@@ -78,7 +78,7 @@ public class MainFragment extends Fragment {
         categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                categoryIndex = parent.getSelectedItemPosition()  + 9;
+                categoryIndex = parent.getSelectedItemPosition()  + 8;
             }
 
             @Override
